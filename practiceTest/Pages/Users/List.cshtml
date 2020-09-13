@@ -1,0 +1,31 @@
+﻿@page
+@model practiceTest.Pages.Users.ListModel
+@{
+    ViewData["Title"] = "List";
+}
+
+<h2>List</h2>
+
+<table class="table">
+    <tbody>
+        @foreach (var item in Model.userList)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(Model => item.name)
+                </td>
+                <td>
+                    @Html.DisplayFor(Model => item.username)
+                </td>
+                <td>
+                    @Html.DisplayFor(Model => item.email)
+                </td>
+                <td>
+                    @Html.DisplayFor(Model => item.address.city)
+                    @Html.DisplayFor(Model => item.address.street)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
