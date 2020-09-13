@@ -5,20 +5,23 @@ using practiceTest.Core;
 using System.Net.Http;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.WebUtilities;
+using System.Linq;
 
 namespace practiceTest.Service
 {
     public class ServiceConnect : IUserService
     {
 
+        public List<User> userList { get; set; }
+
         public ServiceConnect()
         {
-
+            userList = new List<User>();
         }
 
         public async Task<List<User>> GetAllUsers()
         {
-            List<User> userList = new List<User>();
+            //List<User> userList = new List<User>();
             using (var httpClient = new HttpClient())
             {
                 using (var response = await httpClient.GetAsync("https://jsonplaceholder.typicode.com/users/"))
@@ -34,7 +37,8 @@ namespace practiceTest.Service
 
         public async Task<List<User>> GetUserByNames(string name, string username, string email)
         {
-            List<User> userList = new List<User>();
+            List<User> users = new List<User>();
+            
             var query = new Dictionary<string, string>();
             query = createSearch( name,  username,  email);
 
@@ -43,11 +47,36 @@ namespace practiceTest.Service
                 using (var response = await httpClient.GetAsync(QueryHelpers.AddQueryString("https://jsonplaceholder.typicode.com/users/", query)))
                 {
                     string apiResponse = await response.Content.ReadAsStringAsync();
-                    userList = JsonConvert.DeserializeObject<List<User>>(apiResponse);
+                    users = JsonConvert.DeserializeObject<List<User>>(apiResponse);
                 }
             }
 
-            return userList;
+            return users;
+
+        }
+
+        public async Task<List<User>> GetUserByCity(string city)
+        {
+            List<User> users = await GetAllUsers();
+
+            List<User> usersByCity = users.FindAll(s => s.address.city.Equals(city));
+
+            return usersByCity;
+
+        }
+
+        public List<string> GetDistinctCities()
+        {
+            List<string> cities = new List<string>();
+
+            foreach(var u in userList)
+            {
+                cities.Add(u.address.city);
+            }
+            
+            List<string> distinctCities = cities.Distinct().ToList();
+
+            return distinctCities;
 
         }
 

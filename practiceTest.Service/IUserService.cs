@@ -10,5 +10,7 @@ namespace practiceTest.Service
     {
         Task<List<User>> GetAllUsers();
         Task<List<User>> GetUserByNames(string name, string username, string email);
+        List<string> GetDistinctCities();
+        Task<List<User>> GetUserByCity(string city);
     }
 }

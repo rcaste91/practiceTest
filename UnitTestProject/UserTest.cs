@@ -12,32 +12,56 @@ namespace UnitTestProject
     public class UserTest
     {
 
+        IUserService userService;
+
+        public UserTest()
+        {
+            userService = new ServiceConnect();
+        }
+
         [TestMethod]
         public async Task TestGetAllUsers()
         {
             List<User> users = new List<User>();
 
-            IUserService userService = new ServiceConnect();
             users = await userService.GetAllUsers();
 
             Assert.IsNotNull(users);
 
         }
 
+        /*
         [TestMethod]
         public async Task TestFilterUsers()
         {
+            
             List<User> users = new List<User>();
             string name = "Leanne Graham";
             string username = "";
             string email = "";
 
-            IUserService userService = new ServiceConnect();
             users = await userService.GetUserByNames(name,username,email);
 
             Assert.IsNotNull(users);
+          
+        }
+        */
+
+        [TestMethod]
+        public async Task TestDistinctCities()
+        {
+            List<string> cities = await userService.GetDistinctCities();
+
+            Assert.IsNotNull(cities);
         }
 
+        [TestMethod]
+        public async Task TestFindUsersByCities()
+        {
+            List<User> users = await userService.GetUserByCity("Gwenborough");
+
+            Assert.IsNotNull(users);
+        }
 
     }
 }

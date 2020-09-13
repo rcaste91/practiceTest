@@ -26,8 +26,9 @@ namespace practiceTest.Pages.Users
 
         public async Task<IActionResult> OnGetAsync()
         {
-            
+
             var userListi = await _serviceConnect.GetAllUsers();
+            var f = _serviceConnect.GetDistinctCities();
             var t = await _serviceConnect.GetUserByNames("", "", "Chaim_McDermott@dana.io");
             //var photoId = await photoService.GetAlbumByIdAsync(1);
 
