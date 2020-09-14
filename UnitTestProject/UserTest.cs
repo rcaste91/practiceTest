@@ -48,9 +48,9 @@ namespace UnitTestProject
         */
 
         [TestMethod]
-        public async Task TestDistinctCities()
+        public void TestDistinctCities()
         {
-            List<string> cities = await userService.GetDistinctCities();
+            List<string> cities =  userService.GetDistinctCities();
 
             Assert.IsNotNull(cities);
         }

@@ -9,16 +9,24 @@ namespace UnitTestProject
     [TestClass]
     public class PhotoTest
     {
+
+        PhotoService photoService;
+
+        public PhotoTest()
+        {
+            photoService =  new PhotoService();
+        }
+
         [TestMethod]
         public async Task TestGetPhotoById()
         {
+            List<Album> albums;
             int idPrueba = 1;
-            Album album = new Album();
 
-            IPhotoService photoService = new PhotoService();
-            int albumId= await photoService.GetAlbumByIdAsync(idPrueba);
+            
+            albums= await photoService.GetAlbumByIdAsync(idPrueba);
 
-            Assert.IsNotNull(albumId);
+            Assert.IsNotNull(albums);
             
         }
 
@@ -28,11 +36,35 @@ namespace UnitTestProject
             int idPrueba = 1;
             string url = "";
 
-            IPhotoService photoService = new PhotoService();
             url = await photoService.GetFirstThumbnail(idPrueba);
 
             Assert.IsNotNull(url);
 
         }
+
+
+        [TestMethod]
+        public async Task TestGetAllPhotos()
+        {
+            int idPrueba = 1;
+
+            List<Photo> photos = await photoService.GetAllPhotosInlbum(idPrueba);
+
+            Assert.IsNotNull(photos);
+
+        }
+
+        [TestMethod]
+        public async Task TestDeletePhoto()
+        {
+            int idPrueba = 1;
+
+            bool deleted = await photoService.DeletePhoto(idPrueba);
+
+            Assert.IsTrue(deleted);
+
+        }
+
+
     }
 }

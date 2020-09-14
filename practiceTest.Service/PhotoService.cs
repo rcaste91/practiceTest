@@ -16,12 +16,11 @@ namespace practiceTest.Service
 
         }
 
-        public async Task<int> GetAlbumByIdAsync(int id)
+        public async Task<List<Album>> GetAlbumByIdAsync(int id)
         {
             List<Album> albums = new List<Album>();
             var query = new Dictionary<string, string>();
             query.Add("userId", id.ToString());
-            int idFirstAlbum = 0;
 
             using (var httpClient = new HttpClient())
             {
@@ -32,9 +31,7 @@ namespace practiceTest.Service
                 }
             }
 
-            idFirstAlbum = albums[0].id;
-
-            return idFirstAlbum;
+            return albums;
         }
 
         public async Task<string> GetFirstThumbnail(int id)
@@ -60,5 +57,56 @@ namespace practiceTest.Service
 
             return urlThumbnail;
         }
+
+        public async Task<List<Photo>> GetAllPhotosInlbum(int albumId)
+        {
+            StringBuilder uri = new StringBuilder();
+            uri.Append("https://jsonplaceholder.typicode.com/albums/");
+            uri.Append(albumId.ToString());
+            uri.Append("/photos/");
+
+            List<Photo> photos = new List<Photo>();
+
+            using (var httpClient = new HttpClient())
+            {
+                using (var response = await httpClient.GetAsync(uri.ToString()))
+                {
+                    string apiResponse = await response.Content.ReadAsStringAsync();
+                    photos = JsonConvert.DeserializeObject<List<Photo>>(apiResponse);
+                }
+            }
+
+            return photos;
+
+        }
+
+        public async Task<bool> DeletePhoto(int photoId)
+        {
+
+            StringBuilder uri = new StringBuilder();
+            uri.Append("https://jsonplaceholder.typicode.com/photos/");
+            uri.Append(photoId.ToString());
+
+            bool isDeleted = false;
+
+            using (var httpClient = new HttpClient())
+            {
+                using (var response = await httpClient.DeleteAsync(uri.ToString()))
+                {
+                    string apiResponse = await response.Content.ReadAsStringAsync();
+                    var status = response.StatusCode;
+                    if (status.ToString().Equals("OK"))
+                    {
+                        isDeleted = true;
+                    }
+                    string m = "";
+                }
+            }
+
+            return isDeleted;
+
+        }
+
+
     }
 }

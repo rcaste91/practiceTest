@@ -29,10 +29,13 @@ namespace practiceTest.Pages.Users
 
             var userListi = await _serviceConnect.GetAllUsers();
             var f = _serviceConnect.GetDistinctCities();
-            var t = await _serviceConnect.GetUserByNames("", "", "Chaim_McDermott@dana.io");
+            //var t = await _serviceConnect.GetUserByNames("", "", "Chaim_McDermott@dana.io");
             //var photoId = await photoService.GetAlbumByIdAsync(1);
+            //var photoThu = await photoService.GetFirstThumbnail(1);
+            //var photoThu = await photoService.GetAllPhotosInlbum(1);
+            var photoThu = await photoService.DeletePhoto(1);
 
-            userList = t;
+            userList = userListi;
             
             if (userList == null)
                 return NotFound();

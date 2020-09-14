@@ -9,6 +9,8 @@ namespace practiceTest.Service
     public interface IPhotoService
     {
         Task<string> GetFirstThumbnail(int id);
-        Task<int> GetAlbumByIdAsync(int id);
+        Task<List<Album>> GetAlbumByIdAsync(int id);
+        Task<List<Photo>> GetAllPhotosInlbum(int albumId);
+        Task<bool> DeletePhoto(int photoId);
     }
 }
