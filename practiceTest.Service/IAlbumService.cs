@@ -6,13 +6,9 @@ using practiceTest.Core;
 
 namespace practiceTest.Service
 {
-    public interface IPhotoService
+    public interface IAlbumService
     {
-        Task<string> GetFirstThumbnail(int id);
         Task<List<Album>> GetAlbumByIdAsync(int id);
-        Task<List<Photo>> GetAllPhotosInlbum(int albumId);
-        Task<bool> DeletePhoto(int photoId);
         Task<Album> updateTitle(Album toUpdate);
-        Task<Photo> addPhoto(Photo photo);
     }
 }

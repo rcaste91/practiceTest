@@ -29,6 +29,7 @@ namespace practiceTest
 
             services.AddScoped<IUserService, ServiceConnect>();
             services.AddScoped<IPhotoService, PhotoService>();
+            services.AddScoped<IAlbumService, AlbumService>();
 
             services.Configure<CookiePolicyOptions>(options =>
             {

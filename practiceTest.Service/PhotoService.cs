@@ -11,9 +11,12 @@ namespace practiceTest.Service
 {
     public class PhotoService : IPhotoService
     {
+
+        HttpClient httpClient;
+
         public PhotoService()
         {
-
+            httpClient = new HttpClient();
         }
 
         public async Task<List<Album>> GetAlbumByIdAsync(int id)
@@ -22,14 +25,12 @@ namespace practiceTest.Service
             var query = new Dictionary<string, string>();
             query.Add("userId", id.ToString());
 
-            using (var httpClient = new HttpClient())
-            {
                 using (var response = await httpClient.GetAsync(QueryHelpers.AddQueryString("https://jsonplaceholder.typicode.com/albums/", query)))
                 {
                     string apiResponse = await response.Content.ReadAsStringAsync();
                     albums = JsonConvert.DeserializeObject<List<Album>>(apiResponse);
                 }
-            }
+            
 
             return albums;
         }
@@ -44,14 +45,13 @@ namespace practiceTest.Service
             List<Photo> photos = new List<Photo>();
             string urlThumbnail = "";
 
-            using (var httpClient = new HttpClient())
-            {
+           
                 using (var response = await httpClient.GetAsync(uri.ToString()))
                 {
                     string apiResponse = await response.Content.ReadAsStringAsync();
                     photos = JsonConvert.DeserializeObject<List<Photo>>(apiResponse);
                 }
-            }
+            
 
             urlThumbnail = photos[0].thumbnailUrl;
 
@@ -67,14 +67,13 @@ namespace practiceTest.Service
 
             List<Photo> photos = new List<Photo>();
 
-            using (var httpClient = new HttpClient())
-            {
+           
                 using (var response = await httpClient.GetAsync(uri.ToString()))
                 {
                     string apiResponse = await response.Content.ReadAsStringAsync();
                     photos = JsonConvert.DeserializeObject<List<Photo>>(apiResponse);
                 }
-            }
+            
 
             return photos;
 
@@ -89,8 +88,7 @@ namespace practiceTest.Service
 
             bool isDeleted = false;
 
-            using (var httpClient = new HttpClient())
-            {
+            
                 using (var response = await httpClient.DeleteAsync(uri.ToString()))
                 {
                     string apiResponse = await response.Content.ReadAsStringAsync();
@@ -99,14 +97,53 @@ namespace practiceTest.Service
                     {
                         isDeleted = true;
                     }
-                    string m = "";
+                    
                 }
-            }
+            
 
             return isDeleted;
 
         }
 
+        public async Task<Album> updateTitle(Album toUpdate)
+        {
+            StringBuilder uri = new StringBuilder();
+            uri.Append("https://jsonplaceholder.typicode.com/albums/");
+            uri.Append(toUpdate.id.ToString());
+
+            Album updatedAlbum;
+
+            var jsonRequest = JsonConvert.SerializeObject(toUpdate);
+            var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
+
+                using (var response = await httpClient.PatchAsync(uri.ToString(),content))
+                {
+                    string apiResponse = await response.Content.ReadAsStringAsync();
+                    updatedAlbum = JsonConvert.DeserializeObject<Album>(apiResponse);
+                }
+
+            return updatedAlbum;
+            
+        }
+
+        public async Task<Photo> addPhoto(Photo photo)
+        {
+            StringBuilder uri = new StringBuilder();
+            uri.Append("https://jsonplaceholder.typicode.com/photos/");
+
+            Photo createdPhoto;
+
+            var jsonRequest = JsonConvert.SerializeObject(photo);
+            var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
+
+            using (var response = await httpClient.PostAsync(uri.ToString(), content))
+            {
+                string apiResponse = await response.Content.ReadAsStringAsync();
+                createdPhoto = JsonConvert.DeserializeObject<Photo>(apiResponse);
+            }
+
+            return createdPhoto;
+        }
 
     }
 }

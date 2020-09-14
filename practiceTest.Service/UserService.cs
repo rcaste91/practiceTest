@@ -13,24 +13,23 @@ namespace practiceTest.Service
     {
 
         public List<User> userList { get; set; }
+        HttpClient httpClient;
 
         public ServiceConnect()
         {
             userList = new List<User>();
+            httpClient = new HttpClient();
         }
 
         public async Task<List<User>> GetAllUsers()
         {
-            //List<User> userList = new List<User>();
-            using (var httpClient = new HttpClient())
-            {
+           
                 using (var response = await httpClient.GetAsync("https://jsonplaceholder.typicode.com/users/"))
                 {
                     string apiResponse = await response.Content.ReadAsStringAsync();
                     userList = JsonConvert.DeserializeObject<List<User>>(apiResponse);
                 }
-            }
-
+            
             
             return userList;
         }
@@ -42,14 +41,13 @@ namespace practiceTest.Service
             var query = new Dictionary<string, string>();
             query = createSearch( name,  username,  email);
 
-            using (var httpClient = new HttpClient())
-            {
+        
                 using (var response = await httpClient.GetAsync(QueryHelpers.AddQueryString("https://jsonplaceholder.typicode.com/users/", query)))
                 {
                     string apiResponse = await response.Content.ReadAsStringAsync();
                     users = JsonConvert.DeserializeObject<List<User>>(apiResponse);
                 }
-            }
+            
 
             return users;
 

@@ -17,18 +17,7 @@ namespace UnitTestProject
             photoService =  new PhotoService();
         }
 
-        [TestMethod]
-        public async Task TestGetPhotoById()
-        {
-            List<Album> albums;
-            int idPrueba = 1;
-
-            
-            albums= await photoService.GetAlbumByIdAsync(idPrueba);
-
-            Assert.IsNotNull(albums);
-            
-        }
+       
 
         [TestMethod]
         public async Task TestGetPhotos()
@@ -62,6 +51,22 @@ namespace UnitTestProject
             bool deleted = await photoService.DeletePhoto(idPrueba);
 
             Assert.IsTrue(deleted);
+
+        }
+
+        [TestMethod]
+        public async Task TestCreateNewPhoto()
+        {
+            Photo newPhoto = new Photo();
+            newPhoto.albumId = 1;
+            newPhoto.id = 9999;
+            newPhoto.title = "Ronald";
+            newPhoto.url = "https://google.com";
+            newPhoto.thumbnailUrl = "https://google.com";
+
+            Photo resultTest = await photoService.addPhoto(newPhoto);
+
+            Assert.AreEqual(newPhoto.title, resultTest.title);
 
         }
 
