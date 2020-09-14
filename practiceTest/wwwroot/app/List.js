@@ -1,4 +1,4 @@
-﻿app.controller("ListController", function ($scope, $http) {
+﻿app.controller("ListController", function ($scope, $http, $location) {
 
     $http.get("/api/ListModel")
         .then(function (res) {
@@ -13,17 +13,22 @@
             sUsername : username,
             sEmail : email
         };
-
-        console.log(search);
-
-        
-
+ 
         $http.post("/api/ListModel/search", JSON.stringify(search))
             .then(function (res) {
                 $scope.Users = res.data;
             });
-            
+    }
 
+    $scope.seeAlbums = function () {
+
+        $location.path('/Albums')
+        /*
+        $http.post("/api/HomeModel")
+            .then(function (res) {
+                console.log(res);
+            });
+            */
     }
 
 });

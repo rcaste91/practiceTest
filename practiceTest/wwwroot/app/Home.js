@@ -1,11 +1,4 @@
-﻿app.controller("MyController", function ($scope, $http) {
-    /*
-    return $http({
-        method: 'GET',
-        url: '/api/HomeModel',
-        then: $scope.Student = res.data
-    })
-    */
+﻿app.controller("MyController", function ($scope, $http,$location) {
 
     
     $http.get("/api/HomeModel")

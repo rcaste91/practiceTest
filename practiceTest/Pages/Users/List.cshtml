@@ -31,7 +31,7 @@
                 </thead>
                 <tbody>
                     <tr ng-repeat="u in Users">
-                        <td><img src="{{u.thumbnail}}" /></td>
+                        <td><img src="{{u.thumbnail}}" ng-click="seeAlbums()"/></td>
                         <td>{{u.name}}</td>
                         <td>{{u.username}}</td>
                         <td>{{u.email}}</td>
