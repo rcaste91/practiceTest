@@ -1,31 +1,50 @@
 ﻿@page
-@model practiceTest.Pages.Users.ListModel
 @{
     ViewData["Title"] = "List";
 }
 
-<h2>List</h2>
+<h2>User List</h2>
 
-<table class="table">
-    <tbody>
-        @foreach (var item in Model.userList)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(Model => item.name)
-                </td>
-                <td>
-                    @Html.DisplayFor(Model => item.username)
-                </td>
-                <td>
-                    @Html.DisplayFor(Model => item.email)
-                </td>
-                <td>
-                    @Html.DisplayFor(Model => item.address.city)
-                    @Html.DisplayFor(Model => item.address.street)
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<div ng-controller="ListController">
+    
+    <div>
+        <div class="form-group">
+            <label for="busqueda">Name</label>
+            <input type="text" name="busqueda" ng-model="search.Name" />
+            <label for="busquedaU">Username</label>
+            <input type="text" name="busquedaU" ng-model="search.Username" />
+            <label for="busquedaE">Email</label>
+            <input type="text" name="busquedaE" ng-model="search.Email"/>
+            <button ng-click="getdetails(search.Name,search.Username,search.Email)"> Search</button> 
+        </div>
+        
+        <div class="form-group">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <td></td>
+                        <td>Name</td>
+                        <td>Username</td>
+                        <td>Email</td>
+                        <td>Address</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="u in Users">
+                        <td><img src="{{u.thumbnail}}" /></td>
+                        <td>{{u.name}}</td>
+                        <td>{{u.username}}</td>
+                        <td>{{u.email}}</td>
+                        <td>{{u.address.street}},{{u.address.suite}},{{u.address.city}}</td>
+                    </tr>
 
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+</div>
+
+@section Scripts{
+    <script src="~/app/List.js"></script>
+}

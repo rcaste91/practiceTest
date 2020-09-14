@@ -4,61 +4,84 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Newtonsoft.Json;
 using practiceTest.Core;
 using practiceTest.Service;
 
 namespace practiceTest.Pages.Users
 {
-    public class ListModel : PageModel
+    [Route("api/[controller]")]
+    [ApiController]
+    public class ListModel  :Controller
     {
 
-        private readonly IUserService _serviceConnect;
+        private readonly IUserService serviceConnect;
         private readonly IPhotoService photoService;
         private readonly IAlbumService albumService;
 
+        public List<User> userList { get; set; }
+        public List<UserDisplay> displayList { get; set; }
+
         public ListModel(IUserService serviceConnect, IPhotoService photoService, IAlbumService albumService)
         {
-            this._serviceConnect = serviceConnect;
+            this.serviceConnect = serviceConnect;
             this.photoService = photoService;
             this.albumService = albumService;
+
+            displayList = new List<UserDisplay>();
         }
 
-        public List<User> userList { get; set; }
+        [HttpGet]
+        public async Task<JsonResult> getUsers()
+        {
+            userList = await serviceConnect.GetAllUsers();
+            
+            UserDisplay us = new UserDisplay();
 
+            foreach (User u in userList)
+            {
+                us.address = u.address;
+                us.name = u.name;
+                us.username = u.username;
+                us.email = u.email;
+                us.id = u.id;
+                us.address = u.address;
+                us.thumbnail = await photoService.GetFirstThumbnail(u.id);
+                displayList.Add(us);
+                us = new UserDisplay();
+            }
+            
+            
 
-        public async Task<IActionResult> OnGetAsync()
+            return Json(displayList);
+        }
+
+        [HttpPost]
+        [Route("search/")]
+        public async Task<JsonResult> search([FromBody] Search search)
         {
 
-            var userListi = await _serviceConnect.GetAllUsers();
-            var f = _serviceConnect.GetDistinctCities();
-            //var t = await _serviceConnect.GetUserByNames("", "", "Chaim_McDermott@dana.io");
-            var photoId = await albumService.GetAlbumByIdAsync(1);
-            var photoThu = await photoService.GetFirstThumbnail(1);
-            var photoThu2 = await photoService.GetAllPhotosInlbum(1);
-            var photoThu3 = await photoService.DeletePhoto(1);
-            //
-            Album album = new Album();
-            album.id = 1;
-            album.userId = 1;
-            album.title = "nuevo titulo de prueba";
-            var ty = await albumService.updateTitle(album);
-            //
-            Photo newPhoto = new Photo();
-            newPhoto.albumId = 1;
-            newPhoto.id = 9999;
-            newPhoto.title = "Ronald";
-            newPhoto.url = "https://google.com";
-            newPhoto.thumbnailUrl = "https://google.com";
+           userList = await serviceConnect.GetUserByNames(search.sName, search.sUsername, search.sEmail);
 
-            var yy = await photoService.addPhoto(newPhoto);
+            UserDisplay us = new UserDisplay();
 
-            userList = userListi;
-            
-            if (userList == null)
-                return NotFound();
+            foreach (User u in userList)
+            {
+                us.address = u.address;
+                us.name = u.name;
+                us.username = u.username;
+                us.email = u.email;
+                us.id = u.id;
+                us.address = u.address;
+                us.thumbnail = await photoService.GetFirstThumbnail(u.id);
+                displayList.Add(us);
+                us = new UserDisplay();
+            }
 
-
-            return Page();
+            return Json(displayList);
         }
+
+    
+
     }
 }
